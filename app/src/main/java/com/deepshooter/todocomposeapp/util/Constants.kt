@@ -11,4 +11,7 @@ object Constants {
     const val LIST_ARGUMENT_KEY = "action"
     const val TASK_ARGUMENT_KEY = "taskId"
 
+
+    const val ICON_ALPHA_DISABLED = 0.38F
+
 }
