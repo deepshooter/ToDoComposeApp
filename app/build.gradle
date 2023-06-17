@@ -49,6 +49,7 @@ android {
 }
 
 def room_version = "2.5.1"
+def nav_version = "2.5.3"
 
 
 dependencies {
@@ -68,6 +69,10 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    //Compose Navigation
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+
 
     //Room Components
     implementation "androidx.room:room-runtime:$room_version"
