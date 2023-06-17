@@ -6,7 +6,7 @@ import com.deepshooter.todocomposeapp.ui.theme.LowPriorityColor
 import com.deepshooter.todocomposeapp.ui.theme.MediumPriorityColor
 import com.deepshooter.todocomposeapp.ui.theme.NonePriorityColor
 
-enum class Priority(color: Color) {
+enum class Priority(val color: Color) {
     HIGH(HighPriorityColor),
     MEDIUM(MediumPriorityColor),
     LOW(LowPriorityColor),

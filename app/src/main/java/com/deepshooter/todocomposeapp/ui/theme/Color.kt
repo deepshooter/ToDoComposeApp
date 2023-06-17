@@ -24,6 +24,8 @@ val MediumGray = Color(0xFF9C9C9C)
 val DarkGray = Color(0xFF141414)
 val Purple500 = Color(0xFF6200EE)
 val Teal500 = Color(0xFF009688)
+val Purple700 = Color(0xFF673AB7)
+val Purple400 = Color(0xFF7E57C2)
 
 
 val ColorScheme.topAppBarContentColor: Color
@@ -32,4 +34,8 @@ val ColorScheme.topAppBarContentColor: Color
 
 val ColorScheme.topAppBarBackgroundColor: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) Color.Black else Teal500
+    get() = if (isSystemInDarkTheme()) Color.Black else Purple500
+
+val ColorScheme.fabBackgroundColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Purple700 else Teal500
