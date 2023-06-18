@@ -3,11 +3,14 @@ package com.deepshooter.todocomposeapp.ui.screens.list
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,8 +32,25 @@ import com.deepshooter.todocomposeapp.ui.theme.taskItemTextColor
 
 
 @Composable
-fun ListContent() {
+fun ListContent(
+    todoTaskList: List<TodoTask>,
+    navigateToTaskScreen: (taskId: Int) -> Unit,
+    paddingValues: PaddingValues
+) {
 
+    LazyColumn(Modifier.padding(paddingValues)) {
+        items(
+            items = todoTaskList,
+            key = { task ->
+                task.id
+            }
+        ) { task ->
+            TaskItem(
+                todoTask = task,
+                navigateToTaskScreen = navigateToTaskScreen
+            )
+        }
+    }
 
 }
 
