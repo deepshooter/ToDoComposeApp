@@ -14,4 +14,6 @@ object Constants {
 
     const val ICON_ALPHA_DISABLED = 0.38F
 
+    const val MAX_TITLE_LENGTH = 25
+
 }
