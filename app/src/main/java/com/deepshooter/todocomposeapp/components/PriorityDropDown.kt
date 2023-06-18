@@ -2,6 +2,7 @@ package com.deepshooter.todocomposeapp.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -48,11 +49,13 @@ fun PriorityDropDown(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
             .height(PRIORITY_DROP_DOWN_HEIGHT)
             .clickable { expanded = true }
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38F)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38F),
+                shape = MaterialTheme.shapes.extraSmall
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -90,7 +93,7 @@ fun PriorityDropDown(
 
 
         DropdownMenu(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(fraction = 0.94F),
             expanded = expanded,
             onDismissRequest = { expanded = false }) {
 
