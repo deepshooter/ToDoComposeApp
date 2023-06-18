@@ -6,9 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,10 +28,31 @@ import com.deepshooter.todocomposeapp.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.deepshooter.todocomposeapp.ui.theme.TASK_ITEM_ELEVATION
 import com.deepshooter.todocomposeapp.ui.theme.taskItemBackgroundColor
 import com.deepshooter.todocomposeapp.ui.theme.taskItemTextColor
+import com.deepshooter.todocomposeapp.util.RequestState
 
 
 @Composable
 fun ListContent(
+    todoTaskList: RequestState<List<TodoTask>>,
+    navigateToTaskScreen: (taskId: Int) -> Unit,
+    paddingValues: PaddingValues
+) {
+
+    if (todoTaskList is RequestState.Success) {
+        if (todoTaskList.data.isEmpty()) {
+            EmptyContent()
+        } else {
+            DisplayTask(
+                todoTaskList = todoTaskList.data,
+                navigateToTaskScreen = navigateToTaskScreen,
+                paddingValues = paddingValues
+            )
+        }
+    }
+}
+
+@Composable
+fun DisplayTask(
     todoTaskList: List<TodoTask>,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     paddingValues: PaddingValues
@@ -51,7 +71,6 @@ fun ListContent(
             )
         }
     }
-
 }
 
 
@@ -96,8 +115,7 @@ fun TaskItem(
                 ) {
                     Canvas(
                         modifier = Modifier
-                            .width(PRIORITY_INDICATOR_SIZE)
-                            .height(PRIORITY_INDICATOR_SIZE)
+                            .size(PRIORITY_INDICATOR_SIZE)
                     ) {
                         drawCircle(color = todoTask.priority.color)
                     }
