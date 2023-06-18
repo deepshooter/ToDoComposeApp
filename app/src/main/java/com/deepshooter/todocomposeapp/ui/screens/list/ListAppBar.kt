@@ -90,7 +90,7 @@ fun DefaultListAppBar(onSearchClicked: () -> Unit,onSortClicked: (Priority) -> U
     TopAppBar(
         title = {
             Text(
-                text = "Tasks",
+                text = stringResource(id = R.string.list_screen_title),
                 color = MaterialTheme.colorScheme.topAppBarContentColor,
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold, fontSize = TOP_APP_BAR_TITLE_SIZE)
             )
@@ -241,7 +241,7 @@ fun SearchAppBar(
             ),
             placeholder = {
                 Text(
-                    text = "Search",
+                    text = stringResource(id = R.string.search_placeholder),
                     color = Color.White.copy(alpha = ICON_ALPHA_DISABLED)
                 )
             },
@@ -254,7 +254,7 @@ fun SearchAppBar(
                 IconButton(onClick = { }) {
                     Icon(
                         imageVector = Icons.Filled.Search,
-                        contentDescription = "Search Icon",
+                        contentDescription = stringResource(id = R.string.search_icon),
                         tint = MaterialTheme.colorScheme.topAppBarContentColor.copy(alpha = ICON_ALPHA_DISABLED)
                     )
 
@@ -282,7 +282,7 @@ fun SearchAppBar(
                     }) {
                     Icon(
                         imageVector = Icons.Filled.Close,
-                        contentDescription = "Close Icon",
+                        contentDescription = stringResource(id = R.string.close_icon),
                         tint = MaterialTheme.colorScheme.topAppBarContentColor
                     )
 
