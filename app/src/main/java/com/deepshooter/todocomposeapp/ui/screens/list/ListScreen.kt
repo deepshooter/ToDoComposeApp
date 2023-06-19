@@ -104,7 +104,7 @@ fun DisplaySnackBar(
         if (action != Action.NO_ACTION) {
             scope.launch {
                 val snackBarResult = snackBarHostState.showSnackbar(
-                    message = "${action.name} :$taskTitle",
+                    message = "${action.name} : $taskTitle",
                     actionLabel = "OK"
                 )
             }
