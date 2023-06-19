@@ -1,5 +1,6 @@
 package com.deepshooter.todocomposeapp.navigations.destinations
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -8,6 +9,7 @@ import com.deepshooter.todocomposeapp.ui.screens.list.ListScreen
 import com.deepshooter.todocomposeapp.ui.viewmodel.SharedViewModel
 import com.deepshooter.todocomposeapp.util.Constants.LIST_ARGUMENT_KEY
 import com.deepshooter.todocomposeapp.util.Constants.LIST_SCREEN
+import com.deepshooter.todocomposeapp.util.toAction
 
 fun NavGraphBuilder.listComposable(
     navigateToTaskScreen: (taskId: Int) -> Unit,
@@ -15,9 +17,18 @@ fun NavGraphBuilder.listComposable(
 
     composable(route = LIST_SCREEN, arguments = listOf(navArgument(LIST_ARGUMENT_KEY) {
         type = NavType.StringType
-    })) {
+    })) { navBackStackEntry ->
+
+        val action = navBackStackEntry.arguments?.getString(LIST_ARGUMENT_KEY).toAction()
+
+        LaunchedEffect(key1 = action) {
+            sharedViewModel.action.value = action
+        }
+
         ListScreen(
             navigateToTaskScreen = navigateToTaskScreen,
-            sharedViewModel = sharedViewModel)
+            sharedViewModel = sharedViewModel
+        )
+
     }
 }

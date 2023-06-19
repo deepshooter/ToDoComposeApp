@@ -7,10 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.deepshooter.todocomposeapp.data.model.Priority
 import com.deepshooter.todocomposeapp.data.model.TodoTask
 import com.deepshooter.todocomposeapp.data.repositories.ToDoRepository
+import com.deepshooter.todocomposeapp.util.Action
 import com.deepshooter.todocomposeapp.util.Constants.MAX_TITLE_LENGTH
 import com.deepshooter.todocomposeapp.util.RequestState
 import com.deepshooter.todocomposeapp.util.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -26,6 +28,8 @@ class SharedViewModel @Inject constructor(
     val title: MutableState<String> = mutableStateOf("")
     val description: MutableState<String> = mutableStateOf("")
     val priority: MutableState<Priority> = mutableStateOf(Priority.LOW)
+
+    val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
 
 
     val searchAppBarState: MutableState<SearchAppBarState> =
@@ -61,6 +65,49 @@ class SharedViewModel @Inject constructor(
                 _selectedTask.value = task
             }
         }
+    }
+
+
+    private fun addTask() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val todoTask = TodoTask(
+                title = title.value,
+                description = description.value,
+                priority = priority.value
+            )
+
+            repository.addTask(todoTask = todoTask)
+        }
+    }
+
+    fun handleDatabaseAction(action: Action) {
+        when (action) {
+
+            Action.ADD -> {
+                addTask()
+            }
+
+            Action.UPDATE -> {
+
+            }
+
+            Action.DELETE -> {
+
+            }
+
+            Action.DELETE_ALL -> {
+
+            }
+
+            Action.UNDO -> {
+
+            }
+
+            else -> {
+
+            }
+        }
+        this.action.value = Action.NO_ACTION
     }
 
     fun updateTaskFields(selectedTask: TodoTask?) {
