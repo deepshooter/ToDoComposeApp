@@ -29,25 +29,55 @@ import com.deepshooter.todocomposeapp.ui.theme.TASK_ITEM_ELEVATION
 import com.deepshooter.todocomposeapp.ui.theme.taskItemBackgroundColor
 import com.deepshooter.todocomposeapp.ui.theme.taskItemTextColor
 import com.deepshooter.todocomposeapp.util.RequestState
+import com.deepshooter.todocomposeapp.util.SearchAppBarState
 
 
 @Composable
 fun ListContent(
     todoTaskList: RequestState<List<TodoTask>>,
+    searchedTaskList: RequestState<List<TodoTask>>,
+    searchAppBarState: SearchAppBarState,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     paddingValues: PaddingValues
 ) {
 
-    if (todoTaskList is RequestState.Success) {
-        if (todoTaskList.data.isEmpty()) {
-            EmptyContent()
-        } else {
-            DisplayTask(
-                todoTaskList = todoTaskList.data,
+    if (searchAppBarState == SearchAppBarState.TRIGGERED) {
+        if (searchedTaskList is RequestState.Success) {
+            HandleListContent(
+                tasks = searchedTaskList.data,
                 navigateToTaskScreen = navigateToTaskScreen,
                 paddingValues = paddingValues
             )
         }
+    } else {
+
+        if (todoTaskList is RequestState.Success) {
+            HandleListContent(
+                tasks = todoTaskList.data,
+                navigateToTaskScreen = navigateToTaskScreen,
+                paddingValues = paddingValues
+            )
+        }
+
+    }
+
+}
+
+@Composable
+fun HandleListContent(
+    tasks: List<TodoTask>,
+    navigateToTaskScreen: (taskId: Int) -> Unit,
+    paddingValues: PaddingValues
+) {
+
+    if (tasks.isEmpty()) {
+        EmptyContent()
+    } else {
+        DisplayTask(
+            todoTaskList = tasks,
+            navigateToTaskScreen = navigateToTaskScreen,
+            paddingValues = paddingValues
+        )
     }
 }
 

@@ -38,6 +38,8 @@ fun ListScreen(navigateToTaskScreen: (taskId: Int) -> Unit , sharedViewModel: Sh
 
     val action by sharedViewModel.action
     val allTasks by sharedViewModel.allTask.collectAsState()
+    val searchedTask by sharedViewModel.searchedTask.collectAsState()
+
 
     val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
     val searchTextState: String by sharedViewModel.searchTextState
@@ -64,6 +66,8 @@ fun ListScreen(navigateToTaskScreen: (taskId: Int) -> Unit , sharedViewModel: Sh
         content = {
             ListContent(
                 todoTaskList = allTasks,
+                searchedTaskList = searchedTask,
+                searchAppBarState = searchAppBarState,
                 navigateToTaskScreen = navigateToTaskScreen,
                 paddingValues = it
             )
