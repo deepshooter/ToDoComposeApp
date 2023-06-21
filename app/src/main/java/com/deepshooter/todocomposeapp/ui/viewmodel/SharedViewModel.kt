@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.deepshooter.todocomposeapp.data.model.Priority
 import com.deepshooter.todocomposeapp.data.model.TodoTask
+import com.deepshooter.todocomposeapp.data.repositories.DataStoreRepository
 import com.deepshooter.todocomposeapp.data.repositories.ToDoRepository
 import com.deepshooter.todocomposeapp.util.Action
 import com.deepshooter.todocomposeapp.util.Constants.MAX_TITLE_LENGTH
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SharedViewModel @Inject constructor(
-    private val repository: ToDoRepository
+    private val repository: ToDoRepository,
+    private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
 
 
