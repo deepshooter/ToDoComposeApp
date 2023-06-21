@@ -1,33 +1,51 @@
 package com.deepshooter.todocomposeapp.ui.screens.list
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import com.deepshooter.todocomposeapp.R
 import com.deepshooter.todocomposeapp.data.model.Priority
 import com.deepshooter.todocomposeapp.data.model.TodoTask
+import com.deepshooter.todocomposeapp.ui.theme.HighPriorityColor
+import com.deepshooter.todocomposeapp.ui.theme.LARGEST_PADDING
 import com.deepshooter.todocomposeapp.ui.theme.LARGE_PADDING
 import com.deepshooter.todocomposeapp.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.deepshooter.todocomposeapp.ui.theme.TASK_ITEM_ELEVATION
 import com.deepshooter.todocomposeapp.ui.theme.taskItemBackgroundColor
 import com.deepshooter.todocomposeapp.ui.theme.taskItemTextColor
+import com.deepshooter.todocomposeapp.util.Action
 import com.deepshooter.todocomposeapp.util.RequestState
 import com.deepshooter.todocomposeapp.util.SearchAppBarState
 
@@ -41,6 +59,7 @@ fun ListContent(
     sortState: RequestState<Priority>,
     searchAppBarState: SearchAppBarState,
     navigateToTaskScreen: (taskId: Int) -> Unit,
+    onSwipeToDelete: (Action, TodoTask) -> Unit,
     paddingValues: PaddingValues
 ) {
 
@@ -51,6 +70,7 @@ fun ListContent(
                 if (searchedTaskList is RequestState.Success) {
                     HandleListContent(
                         tasks = searchedTaskList.data,
+                        onSwipeToDelete = onSwipeToDelete,
                         navigateToTaskScreen = navigateToTaskScreen,
                         paddingValues = paddingValues
                     )
@@ -61,6 +81,7 @@ fun ListContent(
                 if (todoTaskList is RequestState.Success) {
                     HandleListContent(
                         tasks = todoTaskList.data,
+                        onSwipeToDelete = onSwipeToDelete,
                         navigateToTaskScreen = navigateToTaskScreen,
                         paddingValues = paddingValues
                     )
@@ -70,6 +91,7 @@ fun ListContent(
             sortState.data == Priority.LOW -> {
                 HandleListContent(
                     tasks = lowPriorityTasks,
+                    onSwipeToDelete = onSwipeToDelete,
                     navigateToTaskScreen = navigateToTaskScreen,
                     paddingValues = paddingValues
                 )
@@ -78,6 +100,7 @@ fun ListContent(
             sortState.data == Priority.HIGH -> {
                 HandleListContent(
                     tasks = highPriorityTasks,
+                    onSwipeToDelete = onSwipeToDelete,
                     navigateToTaskScreen = navigateToTaskScreen,
                     paddingValues = paddingValues
                 )
@@ -91,6 +114,7 @@ fun ListContent(
 @Composable
 fun HandleListContent(
     tasks: List<TodoTask>,
+    onSwipeToDelete: (Action, TodoTask) -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     paddingValues: PaddingValues
 ) {
@@ -100,15 +124,18 @@ fun HandleListContent(
     } else {
         DisplayTask(
             todoTaskList = tasks,
+            onSwipeToDelete = onSwipeToDelete,
             navigateToTaskScreen = navigateToTaskScreen,
             paddingValues = paddingValues
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayTask(
     todoTaskList: List<TodoTask>,
+    onSwipeToDelete: (Action, TodoTask) -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     paddingValues: PaddingValues
 ) {
@@ -120,10 +147,33 @@ fun DisplayTask(
                 task.id
             }
         ) { task ->
-            TaskItem(
-                todoTask = task,
-                navigateToTaskScreen = navigateToTaskScreen
+
+            val dismissState = rememberDismissState()
+            val dismissDirection = dismissState.dismissDirection
+            val isDismissed = dismissState.isDismissed(DismissDirection.EndToStart)
+
+            if (isDismissed && dismissDirection == DismissDirection.EndToStart) {
+                onSwipeToDelete(Action.DELETE,task)
+            }
+
+            val degrees by animateFloatAsState(
+                targetValue =
+                if (dismissState.targetValue == DismissValue.Default)
+                    0F
+                else
+                    -45F
             )
+
+            SwipeToDismiss(
+                state = dismissState,
+                directions = setOf(DismissDirection.EndToStart),
+                background = { RedBackground(degrees = degrees) },
+                dismissContent = {
+                    TaskItem(
+                        todoTask = task,
+                        navigateToTaskScreen = navigateToTaskScreen
+                    )
+                })
         }
     }
 }
@@ -189,6 +239,28 @@ fun TaskItem(
         }
 
     }
+}
+
+
+@Composable
+fun RedBackground(degrees: Float) {
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = HighPriorityColor)
+            .padding(horizontal = LARGEST_PADDING),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+
+        Icon(
+            modifier = Modifier.rotate(degrees = degrees),
+            imageVector = Icons.Filled.Delete,
+            contentDescription = stringResource(id = R.string.delete_icon),
+            tint = Color.White
+        )
+    }
+
 }
 
 
