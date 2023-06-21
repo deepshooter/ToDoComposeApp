@@ -36,27 +36,52 @@ import com.deepshooter.todocomposeapp.util.SearchAppBarState
 fun ListContent(
     todoTaskList: RequestState<List<TodoTask>>,
     searchedTaskList: RequestState<List<TodoTask>>,
+    lowPriorityTasks: List<TodoTask>,
+    highPriorityTasks: List<TodoTask>,
+    sortState: RequestState<Priority>,
     searchAppBarState: SearchAppBarState,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     paddingValues: PaddingValues
 ) {
 
-    if (searchAppBarState == SearchAppBarState.TRIGGERED) {
-        if (searchedTaskList is RequestState.Success) {
-            HandleListContent(
-                tasks = searchedTaskList.data,
-                navigateToTaskScreen = navigateToTaskScreen,
-                paddingValues = paddingValues
-            )
-        }
-    } else {
+    if (sortState is RequestState.Success) {
 
-        if (todoTaskList is RequestState.Success) {
-            HandleListContent(
-                tasks = todoTaskList.data,
-                navigateToTaskScreen = navigateToTaskScreen,
-                paddingValues = paddingValues
-            )
+        when {
+            searchAppBarState == SearchAppBarState.TRIGGERED -> {
+                if (searchedTaskList is RequestState.Success) {
+                    HandleListContent(
+                        tasks = searchedTaskList.data,
+                        navigateToTaskScreen = navigateToTaskScreen,
+                        paddingValues = paddingValues
+                    )
+                }
+            }
+
+            sortState.data == Priority.NONE -> {
+                if (todoTaskList is RequestState.Success) {
+                    HandleListContent(
+                        tasks = todoTaskList.data,
+                        navigateToTaskScreen = navigateToTaskScreen,
+                        paddingValues = paddingValues
+                    )
+                }
+            }
+
+            sortState.data == Priority.LOW -> {
+                HandleListContent(
+                    tasks = lowPriorityTasks,
+                    navigateToTaskScreen = navigateToTaskScreen,
+                    paddingValues = paddingValues
+                )
+            }
+
+            sortState.data == Priority.HIGH -> {
+                HandleListContent(
+                    tasks = highPriorityTasks,
+                    navigateToTaskScreen = navigateToTaskScreen,
+                    paddingValues = paddingValues
+                )
+            }
         }
 
     }
