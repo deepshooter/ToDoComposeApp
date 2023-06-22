@@ -21,5 +21,6 @@ object Constants {
     const val PREFERENCE_KEY = "sort_state"
 
     const val SPLASH_SCREEN_DELAY = 3000L
+    const val ANIMATION_TRANSITION_300 = 300
 
 }
