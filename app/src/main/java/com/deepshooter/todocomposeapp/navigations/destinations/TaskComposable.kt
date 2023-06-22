@@ -2,6 +2,7 @@ package com.deepshooter.todocomposeapp.navigations.destinations
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,6 +30,12 @@ fun NavGraphBuilder.taskComposable(
         enterTransition = {
             slideInHorizontally(
                 initialOffsetX = { fullWidth -> -fullWidth },
+                animationSpec = tween(durationMillis = ANIMATION_TRANSITION_300)
+            )
+        },
+        exitTransition = {
+            slideOutHorizontally(
+                targetOffsetX = { fullWidth -> -fullWidth },
                 animationSpec = tween(durationMillis = ANIMATION_TRANSITION_300)
             )
         }
