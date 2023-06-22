@@ -3,7 +3,6 @@ package com.deepshooter.todocomposeapp.ui.screens.list
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,16 +27,21 @@ import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListScreen(navigateToTaskScreen: (taskId: Int) -> Unit , sharedViewModel: SharedViewModel) {
+fun ListScreen(
+    action: Action,
+    navigateToTaskScreen: (taskId: Int) -> Unit ,
+    sharedViewModel: SharedViewModel) {
 
     LaunchedEffect(key1 = true) {
         sharedViewModel.getAllTasks()
         sharedViewModel.readSortState()
     }
 
-    val action by sharedViewModel.action
+    LaunchedEffect(key1 = action) {
+        sharedViewModel.handleDatabaseAction(action = action)
+    }
+
     val allTasks by sharedViewModel.allTask.collectAsState()
     val searchedTask by sharedViewModel.searchedTask.collectAsState()
     val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
@@ -50,7 +54,7 @@ fun ListScreen(navigateToTaskScreen: (taskId: Int) -> Unit , sharedViewModel: Sh
 
     DisplaySnackBar(
         snackBarHostState = snackBarHostState,
-        handleDatabaseActions = { sharedViewModel.handleDatabaseAction(action = action) },
+        onComplete = { sharedViewModel.action.value = it },
         onUndoClicked = {
             sharedViewModel.action.value = it
         },
@@ -107,14 +111,12 @@ fun ListFab(onFabClicked: (taskId: Int) -> Unit) {
 @Composable
 fun DisplaySnackBar(
     snackBarHostState: SnackbarHostState,
-    handleDatabaseActions: () -> Unit,
+    onComplete: (Action) -> Unit,
     onUndoClicked: (Action) -> Unit,
     taskTitle: String,
     action: Action
 
 ) {
-
-    handleDatabaseActions()
 
     val scope = rememberCoroutineScope()
 
@@ -132,6 +134,7 @@ fun DisplaySnackBar(
                     onUndoClicked = onUndoClicked
                 )
             }
+            onComplete(Action.NO_ACTION)
         }
 
     }
