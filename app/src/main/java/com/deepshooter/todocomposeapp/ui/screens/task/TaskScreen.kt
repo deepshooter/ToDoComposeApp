@@ -1,9 +1,11 @@
 package com.deepshooter.todocomposeapp.ui.screens.task
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -34,7 +36,11 @@ fun TaskScreen(
 
     val context = LocalContext.current
 
-    BackHandler(onBackPressed = { navigateToListScreen(Action.NO_ACTION) })
+    //BackHandler(onBackPressed = { navigateToListScreen(Action.NO_ACTION) })
+
+    BackHandler {
+        navigateToListScreen(Action.NO_ACTION)
+    }
 
     Scaffold(
         topBar = {
@@ -78,6 +84,7 @@ fun displayToast(context: Context) {
     Toast.makeText(context, context.getString(R.string.empty_fields), Toast.LENGTH_SHORT).show()
 }
 
+/*
 @Composable
 fun BackHandler(
     backPressedDispatcher: OnBackPressedDispatcher? = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
@@ -101,4 +108,4 @@ fun BackHandler(
             backCallback.remove()
         }
     }
-}
+}*/

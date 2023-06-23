@@ -47,7 +47,6 @@ import com.deepshooter.todocomposeapp.ui.viewmodel.SharedViewModel
 import com.deepshooter.todocomposeapp.util.Action
 import com.deepshooter.todocomposeapp.util.Constants.ICON_ALPHA_DISABLED
 import com.deepshooter.todocomposeapp.util.SearchAppBarState
-import com.deepshooter.todocomposeapp.util.TrailingIconState
 
 @Composable
 fun ListAppBar(
@@ -235,10 +234,6 @@ fun SearchAppBar(
     onSearchClicked: (String) -> Unit
 ) {
 
-    var trailingIconState by remember {
-        mutableStateOf(TrailingIconState.READY_TO_DELETE)
-    }
-
     Surface(
         modifier =
         Modifier
@@ -285,21 +280,10 @@ fun SearchAppBar(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        when (trailingIconState) {
-                            TrailingIconState.READY_TO_DELETE -> {
-                                onTextChange("")
-                                trailingIconState = TrailingIconState.READY_TO_CLOSE
-                            }
-
-                            TrailingIconState.READY_TO_CLOSE -> {
-                                if (text.isNotEmpty()) {
-                                    onTextChange("")
-                                } else {
-                                    onCloseClicked()
-                                    trailingIconState = TrailingIconState.READY_TO_DELETE
-                                }
-
-                            }
+                        if (text.isNotEmpty()) {
+                            onTextChange("")
+                        } else {
+                            onCloseClicked()
                         }
                     }) {
                     Icon(
