@@ -5,10 +5,9 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.deepshooter.todocomposeapp.navigations.destinations.listComposable
-import com.deepshooter.todocomposeapp.navigations.destinations.splashComposable
 import com.deepshooter.todocomposeapp.navigations.destinations.taskComposable
 import com.deepshooter.todocomposeapp.ui.viewmodel.SharedViewModel
-import com.deepshooter.todocomposeapp.util.Constants.SPLASH_SCREEN
+import com.deepshooter.todocomposeapp.util.Constants.LIST_SCREEN
 
 
 @Composable
@@ -20,9 +19,8 @@ fun SetUpNavigation(navHostController: NavHostController, sharedViewModel: Share
 
     NavHost(
         navController = navHostController,
-        startDestination = SPLASH_SCREEN
+        startDestination = LIST_SCREEN
     ) {
-        splashComposable(navigateToListScreen = screen.splash)
         listComposable(navigateToTaskScreen = screen.list, sharedViewModel = sharedViewModel)
         taskComposable(navigateToListScreen = screen.task, sharedViewModel = sharedViewModel)
     }
