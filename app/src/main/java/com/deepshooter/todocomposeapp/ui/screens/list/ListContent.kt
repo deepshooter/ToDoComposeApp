@@ -185,7 +185,7 @@ fun DisplayTask(
                 if (dismissState.targetValue == DismissValue.Default)
                     0F
                 else
-                    -45F
+                    -180F
             )
 
             var itemAppeared by remember { mutableStateOf(false) }
