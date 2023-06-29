@@ -8,6 +8,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,14 +20,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
@@ -41,7 +44,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,7 +55,10 @@ import com.deepshooter.todocomposeapp.data.model.TodoTask
 import com.deepshooter.todocomposeapp.ui.theme.HighPriorityColor
 import com.deepshooter.todocomposeapp.ui.theme.LARGEST_PADDING
 import com.deepshooter.todocomposeapp.ui.theme.LARGE_PADDING
+import com.deepshooter.todocomposeapp.ui.theme.MEDIUM_PADDING
 import com.deepshooter.todocomposeapp.ui.theme.PRIORITY_INDICATOR_SIZE
+import com.deepshooter.todocomposeapp.ui.theme.SMALL_PADDING
+import com.deepshooter.todocomposeapp.ui.theme.TASK_ITEM_CUT_PADDING
 import com.deepshooter.todocomposeapp.ui.theme.TASK_ITEM_ELEVATION
 import com.deepshooter.todocomposeapp.ui.theme.taskItemBackgroundColor
 import com.deepshooter.todocomposeapp.ui.theme.taskItemTextColor
@@ -220,21 +225,27 @@ fun DisplayTask(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskItem(
     todoTask: TodoTask,
     navigateToTaskScreen: (taskId: Int) -> Unit) {
 
 
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        color = taskItemBackgroundColor,
-        shape = RectangleShape,
-        tonalElevation = TASK_ITEM_ELEVATION,
-        onClick = {
-            navigateToTaskScreen(todoTask.id)
-        }
+    Card(
+        modifier = Modifier
+            .padding(
+                bottom = SMALL_PADDING,
+                top = SMALL_PADDING,
+                start = MEDIUM_PADDING,
+                end = MEDIUM_PADDING
+            )
+            .fillMaxWidth()
+            .clickable { navigateToTaskScreen(todoTask.id) },
+        colors = CardDefaults.cardColors(containerColor = taskItemBackgroundColor),
+        shape = CutCornerShape(topEnd = TASK_ITEM_CUT_PADDING),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = TASK_ITEM_ELEVATION,
+        )
     ) {
 
         Column(
@@ -286,22 +297,39 @@ fun TaskItem(
 @Composable
 fun RedBackground(degrees: Float) {
 
-    Box(
+    Card(
         modifier = Modifier
-            .fillMaxSize()
-            .background(color = HighPriorityColor)
-            .padding(horizontal = LARGEST_PADDING),
-        contentAlignment = Alignment.CenterEnd
+            .padding(
+                bottom = SMALL_PADDING,
+                top = SMALL_PADDING,
+                start = MEDIUM_PADDING,
+                end = MEDIUM_PADDING
+            )
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = HighPriorityColor),
+        shape = CutCornerShape(topEnd = LARGE_PADDING),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = TASK_ITEM_ELEVATION,
+        )
     ) {
 
-        Icon(
-            modifier = Modifier.rotate(degrees = degrees),
-            imageVector = Icons.Filled.Delete,
-            contentDescription = stringResource(id = R.string.delete_icon),
-            tint = Color.White
-        )
-    }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = HighPriorityColor)
+                .padding(horizontal = LARGEST_PADDING),
+            contentAlignment = Alignment.CenterEnd
+        ) {
 
+            Icon(
+                modifier = Modifier.rotate(degrees = degrees),
+                imageVector = Icons.Filled.Delete,
+                contentDescription = stringResource(id = R.string.delete_icon),
+                tint = Color.White
+            )
+        }
+
+    }
 }
 
 
