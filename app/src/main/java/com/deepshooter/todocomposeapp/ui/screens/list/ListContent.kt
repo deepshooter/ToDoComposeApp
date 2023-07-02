@@ -60,6 +60,7 @@ import com.deepshooter.todocomposeapp.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.deepshooter.todocomposeapp.ui.theme.SMALL_PADDING
 import com.deepshooter.todocomposeapp.ui.theme.TASK_ITEM_CUT_PADDING
 import com.deepshooter.todocomposeapp.ui.theme.TASK_ITEM_ELEVATION
+import com.deepshooter.todocomposeapp.ui.theme.TITLE_TEXT_SIZE
 import com.deepshooter.todocomposeapp.ui.theme.taskItemBackgroundColor
 import com.deepshooter.todocomposeapp.ui.theme.taskItemTextColor
 import com.deepshooter.todocomposeapp.util.Action
@@ -259,7 +260,7 @@ fun TaskItem(
                     modifier = Modifier.weight(8f),
                     text = todoTask.title,
                     color = taskItemTextColor,
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.headlineSmall.copy(fontSize = TITLE_TEXT_SIZE),
                     fontWeight = FontWeight.Bold,
                     maxLines = 1
                 )
